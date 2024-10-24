@@ -1,0 +1,10 @@
+12345;Juan;Pérez;M;40;juan.perez@mail.com;3001234567;Ingeniería de Sistemas;Ingeniero de Sistemas
+12346;Ana;Gómez;F;35;ana.gomez@mail.com;3009876543;Matemáticas;Matemática
+12347;Carlos;López;M;50;carlos.lopez@mail.com;3006543210;Física;Físico
+12348;María;Rodríguez;F;45;maria.rodriguez@mail.com;3001112222;Química;Química
+12349;Jorge;Martínez;M;38;jorge.martinez@mail.com;3101234321;Ingeniería Industrial;Ingeniero Industrial
+12350;Lucía;Fernández;F;33;lucia.fernandez@mail.com;3109873210;Estadística;Estadística
+12351;Raúl;Gómez;M;41;raul.gomez@mail.com;3206549873;Biología;Biólogo
+12352;Clara;Ortiz;F;47;clara.ortiz@mail.com;3201234560;Filosofía;Filósofa
+12353;David;Ruiz;M;43;david.ruiz@mail.com;3309876543;Historia;Historiador
+12354;Elena;Morales;F;36;elena.morales@mail.com;3202223334;Ciencias Políticas;Politóloga

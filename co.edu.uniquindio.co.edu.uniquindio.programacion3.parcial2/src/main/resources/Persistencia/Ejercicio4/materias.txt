@@ -1,0 +1,5 @@
+54321@@Programación III@@4@@Teórica-Práctica
+54322@@Matemáticas Discretas@@3@@Teórica
+54323@@Física General@@3@@Teórica
+54324@@Química Orgánica@@4@@Teórica-Práctica
+54325@@Ingeniería de Software@@5@@Práctica
