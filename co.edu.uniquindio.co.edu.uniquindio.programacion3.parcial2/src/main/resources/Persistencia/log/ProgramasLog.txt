@@ -1,0 +1,6 @@
+oct 24, 2024 10:45:47 A. M. co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio2.Utils.ArchivoUtil guardarRegistroLog
+INFO: Agregar programa,Programa agregado,2024-10-24
+oct 24, 2024 10:46:06 A. M. co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio2.Utils.ArchivoUtil guardarRegistroLog
+INFO: Agregar programa,Programa agregado,2024-10-24
+oct 24, 2024 10:46:44 A. M. co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio2.Utils.ArchivoUtil guardarRegistroLog
+INFO: Agregar programa,Programa agregado,2024-10-24

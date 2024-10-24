@@ -1,2 +1,12 @@
 oct 21, 2024 4:42:27 P. M. co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Utils.ArchivoUtil guardarRegistroLog
 INFO: Agregar estudiante,Estudiante agregado,2024-10-21
+oct 24, 2024 9:12:12 A. M. co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Utils.ArchivoUtil guardarRegistroLog
+INFO: Agregar estudiante,Estudiante agregado,2024-10-24
+oct 24, 2024 9:18:10 A. M. co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Utils.ArchivoUtil guardarRegistroLog
+INFO: Agregar estudiante,Estudiante agregado,2024-10-24
+oct 24, 2024 9:25:00 A. M. co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Utils.ArchivoUtil guardarRegistroLog
+INFO: Agregar estudiante,Estudiante agregado,2024-10-24
+oct 24, 2024 9:29:45 A. M. co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Utils.ArchivoUtil guardarRegistroLog
+INFO: Agregar estudiante,Estudiante agregado,2024-10-24
+oct 24, 2024 9:52:28 A. M. co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Utils.ArchivoUtil guardarRegistroLog
+INFO: Agregar estudiante,Estudiante agregado,2024-10-24
