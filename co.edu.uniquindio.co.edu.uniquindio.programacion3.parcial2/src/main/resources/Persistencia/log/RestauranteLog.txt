@@ -1,0 +1,4 @@
+oct 24, 2024 11:48:37 A. M. co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Utils.ArchivoUtil guardarRegistroLog
+INFO: inicializarDatos,Datos iniciales cargados exitosamente,2024-10-24
+oct 24, 2024 12:00:26 P. M. co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Utils.ArchivoUtil guardarRegistroLog
+INFO: realizarPedido,Pedido realizado exitosamente,2024-10-24

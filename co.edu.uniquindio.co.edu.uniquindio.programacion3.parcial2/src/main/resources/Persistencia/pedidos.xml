@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="21.0.2" class="java.beans.XMLDecoder">
+ <object class="co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Model.Pedido">
+  <void property="cliente">
+   <object class="co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Model.Cliente">
+    <void property="apellidos">
+     <string>Ramírez Muñoz</string>
+    </void>
+    <void property="cedula">
+     <string>1096321478</string>
+    </void>
+    <void property="codigo">
+     <string>C003</string>
+    </void>
+    <void property="nombre">
+     <string>Carlos</string>
+    </void>
+    <void property="telefono">
+     <string>3203216547</string>
+    </void>
+    <void property="tipoIdentificacion">
+     <string>CC</string>
+    </void>
+   </object>
+  </void>
+  <void property="fecha">
+   <string>2024-10-24</string>
+  </void>
+  <void property="productos">
+   <object class="java.util.ArrayList">
+    <void method="add">
+     <object class="co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Model.Producto">
+      <void property="codigo">
+       <string>P004</string>
+      </void>
+      <void property="nombre">
+       <string>Lasaña</string>
+      </void>
+      <void property="precio">
+       <string>28000</string>
+      </void>
+     </object>
+    </void>
+   </object>
+  </void>
+  <void property="total">
+   <string>28000,00</string>
+  </void>
+ </object>
+</java>

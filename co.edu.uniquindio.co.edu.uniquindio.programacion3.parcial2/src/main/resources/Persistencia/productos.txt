@@ -1,0 +1,5 @@
+P001#Hamburguesa Clásica#15000
+P002#Pizza Mediana#25000
+P003#Perro Caliente#12000
+P004#Lasaña#28000
+P005#Ensalada César#18000
