@@ -1,6 +1,7 @@
 package co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Model;
 
-import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Utils.Persistencia;
+import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Utils.EmpresaSoftwareUtil;
+import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Utils.Persistencia;
 import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Utils.RestauranteUtil;
 
 import java.util.List;
@@ -14,6 +15,10 @@ public class EmpresaSoftware {
         this.listaEmpleados = listaEmpleados;
         this.listaDepartamentos = listaDepartamentos;
         this.listaProyectos = listaProyecctos;
+    }
+
+    public EmpresaSoftware() {
+
     }
 
     public List<Empleado> getListaEmpleados() {
@@ -40,16 +45,19 @@ public class EmpresaSoftware {
         this.listaProyectos = listaProyectos;
     }
 
-    public void cargarDatosIniciales() {
+    public void cargarDatosIniciales() throws Exception {
         // Cargar datos desde los archivos si existen
         try {
             this.listaEmpleados = Persistencia.cargarEmpleados();
-            this.listaProyectos = Persistencia.cargarProyectos();
             this.listaDepartamentos = Persistencia.cargarDepartamentos();
+            this.listaProyectos = Persistencia.cargarProyectos();
         } catch (Exception e) {
             // Si hay error al cargar, usar datos quemados
-            RestauranteUtil.inicializarDatos(this);
+            EmpresaSoftwareUtil.inicializarDatos(this);
         }
 
+    }
+
+    public void agregarAsignacion(Asignacion asignacion) {
     }
 }

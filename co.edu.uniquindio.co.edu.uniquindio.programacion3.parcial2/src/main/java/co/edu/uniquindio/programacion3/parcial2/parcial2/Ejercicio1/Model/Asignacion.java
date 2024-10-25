@@ -1,34 +1,33 @@
 package co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Model;
 
 public class Asignacion {
-    private String id;
-    private String nombre;
-    private String idDepartamentoResponsable;
+    private Empleado empleado;
+    private Proyecto proyecto;
+    private Departamento departamento;
 
-    public Asignacion() {
+    public Asignacion(){}
+
+    public Empleado getEmpleado() {
+        return empleado;
     }
 
-    public String getId() {
-        return id;
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Proyecto getProyecto() {
+        return proyecto;
     }
 
-    public String getNombre() {
-        return nombre;
+    public void setProyecto(Proyecto proyecto) {
+        this.proyecto = proyecto;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public Departamento getDepartamento() {
+        return departamento;
     }
 
-    public String getIdDepartamentoResponsable() {
-        return idDepartamentoResponsable;
-    }
-
-    public void setIdDepartamentoResponsable(String idDepartamentoResponsable) {
-        this.idDepartamentoResponsable = idDepartamentoResponsable;
+    public void setDepartamento(Departamento departamento) {
+        this.departamento = departamento;
     }
 }

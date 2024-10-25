@@ -2,27 +2,26 @@ package co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Controller;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Model.*;
+import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Model.Pedido;
 import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Model.Producto;
+import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Utils.Persistencia;
+import co.edu.uniquindio.programacion3.parcial2.parcial2.EmpresaSoftwareApplication;
 import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Model.Restaurante;
 import co.edu.uniquindio.programacion3.parcial2.parcial2.RestauranteApplication;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class AsignacionController {
 
-    private ObservableList<Empleado> empleadoSeleccionados = FXCollections.observableArrayList();
-    private ObservableList<Departamento> departamentoSeleccionados = FXCollections.observableArrayList();
-    private ObservableList<Proyecto> proyectoSeleccionados = FXCollections.observableArrayList();
+    private ObservableList<Asignacion> asignacionSeleccionada = FXCollections.observableArrayList();
 
     @FXML
     private ResourceBundle resources;
@@ -56,7 +55,57 @@ public class AsignacionController {
 
     @FXML
     void onAsignacion(ActionEvent event) {
+        try {
+            if (validarDatos()) {
+                Asignacion asignacion = new Asignacion();
+                asignacion.setEmpleado(cmbEmpleado.getValue());
+                asignacion.setDepartamento(cmbDepartamento.getValue());
+                asignacion.setProyecto(cmbProyecto.getValue());
 
+                // Agregar el pedido al restaurante
+                EmpresaSoftwareApplication.getEmpresaSoftware().agregarAsignacion(asignacion);
+
+                // Guardar en XML
+                Persistencia.guardarAsignacion(asignacion);
+                Persistencia.guardaRegistroLog("Asignación realizada exitosamente", 1, "realizarAsignacion");
+
+                limpiarFormulario();
+                mostrarInformacion("Éxito", "Asignación realizada correctamente");
+            }
+        } catch (Exception e) {
+            mostrarError("Error al realizar asignación", e.getMessage());
+            Persistencia.guardaRegistroLog("Error al realizar asignación: " + e.getMessage(), 2, "onAsignacion");
+        }
+    }
+
+    private void mostrarInformacion(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private void limpiarFormulario() {
+        cmbEmpleado.setValue(null);
+        cmbDepartamento.setValue(null);
+        cmbProyecto.setValue(null);
+    }
+
+    private boolean validarDatos() {
+        if (cmbEmpleado.getValue() == null) {
+            mostrarError("Error", "Debe seleccionar un empleado");
+            return false;
+        }
+        if (cmbDepartamento.getValue() == null) {
+            mostrarError("Error", "Debe seleccionar un departamento");
+            return false;}
+
+        if (cmbEmpleado.getValue() == null) {
+            mostrarError("Error", "Debe seleccionar un proyecto");
+            return false;
+        }
+        return true;
     }
 
     @FXML
@@ -67,21 +116,27 @@ public class AsignacionController {
 
                 // Cargar clientes y productos desde el restaurante
                 cmbEmpleado.setItems(FXCollections.observableArrayList(empresaSoftware.getListaEmpleados()));
-                cmbProductos.setItems(FXCollections.observableArrayList(restaurante.getListaProductos()));
-
+                cmbProyecto.setItems(FXCollections.observableArrayList(empresaSoftware.getListaProyectos()));
+                cmbDepartamento.setItems(FXCollections.observableArrayList(empresaSoftware.getListaDepartamentos()));
                 // El resto del código permanece igual
-                colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
-                colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-                colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+                colEmpleado.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+                colDepartamento.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+                colProyecto.setCellValueFactory(new PropertyValueFactory<>("nombre"));
 
-                tblProductosSeleccionados.setItems(productosSeleccionados);
-                dpFecha.setValue(LocalDate.now());
-                actualizarTotal();
+                tbAsignacion.setItems(asignacionSeleccionada);
 
             } catch (Exception e) {
                 mostrarError("Error al inicializar", e.getMessage());
             }
 
+    }
+
+    private void mostrarError(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
 }

@@ -1,6 +1,7 @@
 package co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Utils;
 
-import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Model.Estudiante;
+import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Model.*;
+import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Model.Cliente;
 import javafx.collections.ObservableList;
 
 import java.io.FileNotFoundException;
@@ -10,48 +11,92 @@ import java.util.List;
 
 public class Persistencia {
 
-    public static final String RUTA_ARCHIVO_LOG = "src/main/resources/Persistencia/log/BancoLog.txt";
-    private static final String RUTA_ARCHIVO_ESTUDIANTES = "src/main/resources/Persistencia/archivoEstudiantes.txt";
-
+    private static final String RUTA_ARCHIVO_CONFIG = "src/main/resources/Persistencia/config.properties";
 
     public static void guardaRegistroLog(String mensajeLog, int nivel, String accion) {
-        ArchivoUtil.guardarRegistroLog(mensajeLog, nivel, accion, RUTA_ARCHIVO_LOG);
+        ArchivoUtil.guardarRegistroLog(mensajeLog, nivel, accion, RUTA_ARCHIVO_CONFIG);
     }
 
-    public static void guardarEstudiantes(List<Estudiante> listaEstudiantes) throws IOException {
+
+    public static void guardarEmpleados(List<Empleado> listaEmpleados) throws IOException {
         String contenido = "";
-        for(Estudiante estudiante:listaEstudiantes)
-        {
-            contenido+= estudiante.getCodigo()+
-                    ","+estudiante.getNombre()+
-                    ","+estudiante.getNota1()+
-                    ","+estudiante.getNota2()+
-                    ","+estudiante.getNota3()+"\n";
+        for(Empleado empleado : listaEmpleados) {
+            contenido += empleado.getId() + "$$" +
+                    empleado.getNombre() + "$$" +
+                    empleado.getApellido() + "$$" +
+                    empleado.getIdDepartamento() + "\n";
         }
-        ArchivoUtil.guardarArchivo(RUTA_ARCHIVO_ESTUDIANTES, contenido, false);
+        ArchivoUtil.guardarArchivo(RUTA_ARCHIVO_CONFIG, contenido, false);
     }
 
-    public static void cargarDatosArchivos(Estudiante estudiante) throws IOException {
-        ArrayList<Estudiante> estudiantesCargados = cargarEstudiantes();
-        if(estudiantesCargados.size() > 0)
-            estudiante.getListaEstudiantes().addAll(estudiantesCargados);
+    public static ArrayList<Empleado> cargarEmpleados() throws IOException {
+        ArrayList<Empleado> empleados = new ArrayList<>();
+        ArrayList<String> contenido = ArchivoUtil.leerArchivo(RUTA_ARCHIVO_CONFIG);
+
+        for (String linea : contenido) {
+            String[] datos = linea.split("$$");
+            Empleado empleado = new Empleado();
+            empleado.setId(datos[0]);
+            empleado.setNombre(datos[1]);
+            empleado.setApellido(datos[2]);
+            empleado.setIdDepartamento(datos[3]);
+        }
+        return empleados;
     }
 
-    public static ArrayList<Estudiante> cargarEstudiantes() throws FileNotFoundException, IOException{
-        ArrayList<Estudiante> estudiantes =new ArrayList<Estudiante>();
-        ArrayList<String> contenido = ArchivoUtil.leerArchivo(RUTA_ARCHIVO_ESTUDIANTES);
-        String linea="";
-        for (int i = 0; i < contenido.size(); i++)
-        {
-            linea = contenido.get(i);
-            Estudiante estudiante = new Estudiante();
-            estudiante.setCodigo(linea.split(",")[0]);
-            estudiante.setNombre(linea.split(",")[1]);
-            estudiante.setNota1(linea.split(",")[2]);
-            estudiante.setNota2(linea.split(",")[3]);
-            estudiante.setNota3(linea.split(",")[4]);
-            estudiantes.add(estudiante);
+    public static void guardarDepartamentos(List<Departamento> listaDepartamentos) throws IOException {
+        String contenido = "";
+        for(Departamento departamento : listaDepartamentos) {
+            contenido += departamento.getId() + "$$" +
+                    departamento.getNombre() + "$$" +
+                    departamento.getDescripcion() + "$$" +
+                    departamento.getUbicacion() + "\n";
         }
-        return estudiantes;
+        ArchivoUtil.guardarArchivo(RUTA_ARCHIVO_CONFIG, contenido, false);
+
+    }
+
+    public static void guardarProyectos(List<Proyecto> listaProyectos) throws IOException {
+        String contenido = "";
+        for(Proyecto proyecto : listaProyectos) {
+            contenido += proyecto.getId() + "$$" +
+                    proyecto.getNombre() + "$$" +
+                    proyecto.getIdDepartamentoResponsable() + "\n";
+        }
+        ArchivoUtil.guardarArchivo(RUTA_ARCHIVO_CONFIG, contenido, false);
+
+    }
+
+    public static ArrayList<Departamento> cargarDepartamentos() throws IOException {
+        ArrayList<Departamento> departamentos = new ArrayList<>();
+        ArrayList<String> contenido = ArchivoUtil.leerArchivo(RUTA_ARCHIVO_CONFIG);
+
+        for (String linea : contenido) {
+            String[] datos = linea.split("$$");
+            Departamento departamento = new Departamento();
+            departamento.setId(datos[0]);
+            departamento.setNombre(datos[1]);
+            departamento.setDescripcion(datos[2]);
+            departamento.setUbicacion(datos[3]);
+        }
+        return departamentos;
+    }
+
+    public static ArrayList<Proyecto> cargarProyectos() throws IOException {
+        ArrayList<Proyecto> proyectos = new ArrayList<>();
+        ArrayList<String> contenido = ArchivoUtil.leerArchivo(RUTA_ARCHIVO_CONFIG);
+
+        for (String linea : contenido) {
+            String[] datos = linea.split("$$");
+            Proyecto proyecto = new Proyecto();
+            proyecto.setId(datos[0]);
+            proyecto.setNombre(datos[1]);
+            proyecto.setIdDepartamentoResponsable(datos[2]);
+        }
+        return proyectos;
+    }
+
+    public static void guardarAsignacion(Asignacion asignacion) throws IOException {
+    ArchivoUtil.salvarRecursoSerializadoXML(RUTA_ARCHIVO_CONFIG, asignacion);
     }
 }

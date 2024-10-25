@@ -1,4 +1,7 @@
 package co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Utils;
+import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Model.Departamento;
+import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Model.Empleado;
+import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Model.Proyecto;
 import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Model.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -81,5 +84,14 @@ public class Persistencia {
         prop.load(new java.io.FileInputStream(RUTA_ARCHIVO_CONFIG));
         return usuario.equals(prop.getProperty("usuario")) &&
                 contrasenia.equals(prop.getProperty("contrasenia"));
+    }
+
+    public static void guardarEmpleados(List<Empleado> listaEmpleados) {
+    }
+
+    public static void guardarDepartamentos(List<Departamento> listaDepartamentos) {
+    }
+
+    public static void guardarProyectos(List<Proyecto> listaProyectos) {
     }
 }
