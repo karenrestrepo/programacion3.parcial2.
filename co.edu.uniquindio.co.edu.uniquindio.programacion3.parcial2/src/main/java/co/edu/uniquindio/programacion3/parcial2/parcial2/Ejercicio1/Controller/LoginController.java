@@ -1,4 +1,4 @@
-package co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Controller;
+package co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Controller;
 import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Utils.Persistencia;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,11 +25,11 @@ public class LoginController {
         try {
             if (Persistencia.validarCredenciales(txtUsuario.getText(), txtContrasenia.getText())) {
                 // Cargar la ventana de pedidos
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/uniquindio/programacion3/parcial2/parcial2/Pedidos.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/edu/uniquindio/programacion3/parcial2/parcial2/Asignacion.fxml"));
                 Parent root = loader.load();
 
                 Stage stage = new Stage();
-                stage.setTitle("Sistema de Pedidos");
+                stage.setTitle("Sistema de Asignación");
                 stage.setScene(new Scene(root));
                 stage.show();
 
@@ -48,7 +48,7 @@ public class LoginController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
-            alert.setContentText("Error al abrir la ventana de pedidos: " + e.getMessage());
+            alert.setContentText("Error al abrir la ventana de asignaciones: " + e.getMessage());
             alert.showAndWait();
         }
     }

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio3.Controller.LoginController">
+            fx:controller="co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio1.Controller.LoginController">
     <children>
         <Label layoutX="31.0" layoutY="44.0" text="Usuario:" />
         <Label layoutX="31.0" layoutY="89.0" text="Contraseña:" />
