@@ -4,7 +4,6 @@ import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio4.Model.Docent
 import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio4.Model.Estudiante;
 import co.edu.uniquindio.programacion3.parcial2.parcial2.Ejercicio4.Model.Materia;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +24,33 @@ public class Persistencia {
         List<Estudiante> estudiantes = new ArrayList<>();
 
         for (String linea : contenido) {
-            String[] datos = linea.split(";");
-            if (datos.length == 7) {  // Asegúrate de que hay 7 datos
-                Estudiante estudiante = new Estudiante(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5], datos[6]);
-                estudiantes.add(estudiante);
-            } else {
-                System.out.println("Datos inválidos en línea de estudiante: " + linea);
+            try {
+                String[] datos = linea.split(";");
+                if (datos.length == 7) {
+                    // Limpiar espacios en blanco de cada campo
+                    for (int i = 0; i < datos.length; i++) {
+                        datos[i] = datos[i].trim();
+                    }
+
+                    Estudiante estudiante = new Estudiante(
+                            datos[0], // código
+                            datos[1], // nombre
+                            datos[2], // apellido
+                            datos[3], // email
+                            datos[4], // teléfono
+                            datos[5], // dirección
+                            datos[6]  // ciudad
+                    );
+                    estudiantes.add(estudiante);
+                } else {
+                    System.out.println("Error: Formato inválido en línea de estudiante: " + linea);
+                    System.out.println("Se esperaban 7 campos, se encontraron: " + datos.length);
+                }
+            } catch (Exception e) {
+                System.out.println("Error al procesar línea de estudiante: " + linea);
+                e.printStackTrace();
             }
         }
-
         return estudiantes;
     }
 
@@ -43,15 +60,35 @@ public class Persistencia {
         List<Docente> docentes = new ArrayList<>();
 
         for (String linea : contenido) {
-            String[] datos = linea.split(";");
-            if (datos.length == 9) {  // Asegúrate de que hay 9 datos
-                Docente docente = new Docente(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5], datos[6], datos[7], datos[8]);
-                docentes.add(docente);
-            } else {
-                System.out.println("Datos inválidos en línea de docente: " + linea);
+            try {
+                String[] datos = linea.split(";");
+                if (datos.length == 9) {
+                    // Limpiar espacios en blanco de cada campo
+                    for (int i = 0; i < datos.length; i++) {
+                        datos[i] = datos[i].trim();
+                    }
+
+                    Docente docente = new Docente(
+                            datos[0], // código
+                            datos[1], // nombre
+                            datos[2], // apellido
+                            datos[3], // email
+                            datos[4], // teléfono
+                            datos[5], // dirección
+                            datos[6], // ciudad
+                            datos[7], // profesión
+                            datos[8]  // especialidad
+                    );
+                    docentes.add(docente);
+                } else {
+                    System.out.println("Error: Formato inválido en línea de docente: " + linea);
+                    System.out.println("Se esperaban 9 campos, se encontraron: " + datos.length);
+                }
+            } catch (Exception e) {
+                System.out.println("Error al procesar línea de docente: " + linea);
+                e.printStackTrace();
             }
         }
-
         return docentes;
     }
 
@@ -61,17 +98,49 @@ public class Persistencia {
         List<Materia> materias = new ArrayList<>();
 
         for (String linea : contenido) {
-            String[] datos = linea.split("@@");
-            Materia materia = new Materia(datos[0], datos[1], Integer.parseInt(datos[2]), datos[3]);
-            materias.add(materia);
-        }
+            try {
+                String[] datos = linea.split("@@");
+                if (datos.length >= 2) {  // Cambiado para ser más flexible con el formato
+                    // Limpiar espacios en blanco de cada campo
+                    for (int i = 0; i < datos.length; i++) {
+                        datos[i] = datos[i].trim();
+                    }
 
+                    // Extraer el código numérico (primera parte antes de @@)
+                    String codigo = datos[0];
+                    String nombre = datos[1];
+                    int creditos = 0;
+                    String tipo = "";
+
+                    if (datos.length >= 3) {
+                        try {
+                            creditos = Integer.parseInt(datos[2]);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error al convertir créditos: " + datos[2]);
+                        }
+                    }
+
+                    if (datos.length >= 4) {
+                        tipo = datos[3];
+                    }
+
+                    Materia materia = new Materia(codigo, nombre, creditos, tipo);
+                    materias.add(materia);
+                } else {
+                    System.out.println("Error: Formato inválido en línea de materia: " + linea);
+                    System.out.println("Se esperaban al menos 2 campos, se encontraron: " + datos.length);
+                }
+            } catch (Exception e) {
+                System.out.println("Error al procesar línea de materia: " + linea);
+                e.printStackTrace();
+            }
+        }
         return materias;
     }
 
     // Guardar la asignación en el archivo
     public static void guardarAsignacion(String contenido) throws IOException {
-        ArchivoUtil.guardarArchivo(RUTA_ARCHIVO_ASIGNACIONES, contenido, true);
+        ArchivoUtil.guardarArchivo(RUTA_ARCHIVO_ASIGNACIONES, contenido + "\n", true);
     }
 
     // Registrar logs de acciones

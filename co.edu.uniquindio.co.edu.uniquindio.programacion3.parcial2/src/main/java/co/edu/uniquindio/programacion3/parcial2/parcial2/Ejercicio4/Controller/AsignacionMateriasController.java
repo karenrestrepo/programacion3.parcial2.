@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,29 +34,92 @@ public class AsignacionMateriasController {
     private TextField txtCodigosEstudiantes;
 
     @FXML
+    public void initialize() {
+        verificarArchivosExisten();
+    }
+
+    private void verificarArchivosExisten() {
+        try {
+            File materias = new File(Persistencia.RUTA_ARCHIVO_MATERIAS);
+            File docentes = new File(Persistencia.RUTA_ARCHIVO_DOCENTES);
+            File estudiantes = new File(Persistencia.RUTA_ARCHIVO_ESTUDIANTES);
+
+            if (!materias.exists()) {
+                mostrarAlerta("Error", "No existe el archivo de materias");
+            }
+            if (!docentes.exists()) {
+                mostrarAlerta("Error", "No existe el archivo de docentes");
+            }
+            if (!estudiantes.exists()) {
+                mostrarAlerta("Error", "No existe el archivo de estudiantes");
+            }
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al verificar los archivos de datos");
+        }
+    }
+
+    @FXML
     void onAsignar(ActionEvent event) {
         try {
-            AsignacionMateriasDto asignacionMateriasDto = construirAsignacionMateriasDto();
+            // Validar que los campos no estén vacíos
+            if (txtCodigoAsignacion.getText().isEmpty() ||
+                    txtCodigoMateria.getText().isEmpty() ||
+                    txtNombreMateria.getText().isEmpty() ||
+                    txtCodigoDocente.getText().isEmpty() ||
+                    txtCodigosEstudiantes.getText().isEmpty()) {
 
-            AsignacionMaterias asignacion = mapearDtoAEntidad(asignacionMateriasDto);
+                mostrarAlerta("Error", "Todos los campos son obligatorios");
+                return;
+            }
+
+            AsignacionMateriasDto dto = construirAsignacionMateriasDto();
+            if (dto == null) {
+                mostrarAlerta("Error", "No se pudo construir la asignación");
+                return;
+            }
+
+            AsignacionMaterias asignacion = mapearDtoAEntidad(dto);
+            if (asignacion == null) {
+                // No mostramos alerta aquí porque mapearDtoAEntidad ya lo hace
+                return;
+            }
+
+            if (asignacion.getMateria() == null) {
+                mostrarAlerta("Error", "No se encontró la materia especificada");
+                return;
+            }
+
             guardarAsignacion(asignacion);
+            mostrarAlerta("Éxito", "La materia fue asignada correctamente.");
 
-            mostrarAlerta("Asignación exitosa", "La materia fue asignada correctamente.");
         } catch (Exception e) {
-            mostrarAlerta("Error en la asignación", "Ocurrió un error al asignar la materia.");
+            mostrarAlerta("Error", "Error al asignar la materia: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     private AsignacionMateriasDto construirAsignacionMateriasDto() {
+        String codigoAsignacion = txtCodigoAsignacion.getText();
+        String codigoMateria = txtCodigoMateria.getText();
+        String nombreMateria = txtNombreMateria.getText();
+        String codigoDocente = txtCodigoDocente.getText();
+        String codigosEstudiantesTexto = txtCodigosEstudiantes.getText();
+
+        // Validar que ningún campo esté vacío
+        if (codigoAsignacion.isEmpty() || codigoMateria.isEmpty() ||
+                nombreMateria.isEmpty() || codigoDocente.isEmpty() ||
+                codigosEstudiantesTexto.isEmpty()) {
+            mostrarAlerta("Error", "Todos los campos son obligatorios");
+            return null;
+        }
+
         return new AsignacionMateriasDto(
-                txtCodigoAsignacion.getText(),
-                txtCodigoMateria.getText(),
-                txtNombreMateria.getText(),
-                txtCodigoDocente.getText(),
-                txtCodigosEstudiantes.getText().split(",")
-        );
-    }
+                codigoAsignacion,
+                codigoMateria,
+                nombreMateria,
+                codigoDocente,
+                codigosEstudiantesTexto.split(",")
+        );}
 
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -67,62 +131,128 @@ public class AsignacionMateriasController {
     // Implementar métodos de conversión y guardado como ya se indicó
     private AsignacionMaterias mapearDtoAEntidad(AsignacionMateriasDto dto) throws IOException {
         Materia materia = buscarMateriaPorCodigo(dto.codigoMateria());
-        Docente docente = buscarDocentePorCodigo(dto.codigoDocente());
-        List<Estudiante> estudiantes = buscarEstudiantesPorCodigos(dto.codigosEstudiantes());
-
-        // Validar si se encontraron todos los elementos
         if (materia == null) {
-            mostrarAlerta("Error", "No se encontró la materia con el código: " + dto.codigoMateria());
-            return null;
-        }
-        if (docente == null) {
-            mostrarAlerta("Error", "No se encontró el docente con el código: " + dto.codigoDocente());
-            return null;
-        }
-        if (estudiantes.isEmpty()) {
-            mostrarAlerta("Error", "No se encontraron los estudiantes con los códigos proporcionados.");
+            mostrarAlerta("Error", "No se encontró la materia con código: " + dto.codigoMateria());
             return null;
         }
 
-        // Crear la entidad AsignacionMaterias con los objetos asociados
+        // Buscar el docente
+        Docente docente = buscarDocentePorCodigo(dto.codigoDocente());
+        if (docente == null) {
+            mostrarAlerta("Error", "No se encontró el docente con código: " + dto.codigoDocente());
+            return null;
+        }
+
+        // Buscar los estudiantes
+        List<Estudiante> estudiantes = buscarEstudiantesPorCodigos(dto.codigosEstudiantes());
+        if (estudiantes.isEmpty()) {
+            mostrarAlerta("Error", "No se encontraron los estudiantes con los códigos proporcionados");
+            return null;
+        }
+
+        // Crear y retornar la asignación
         return new AsignacionMaterias(dto.codigoAsignacion(), materia, docente, estudiantes);
     }
 
     // Buscar Materia por código
     private Materia buscarMateriaPorCodigo(String codigo) throws IOException {
         List<Materia> materias = Persistencia.cargarMaterias(Persistencia.RUTA_ARCHIVO_MATERIAS);
-        return materias.stream().filter(m -> m.getCodigo().equals(codigo)).findFirst().orElse(null);
+
+        if (materias.isEmpty()) {
+            mostrarAlerta("Error", "No hay materias registradas en el sistema");
+            return null;
+        }
+
+        // Formatear el código de búsqueda para que coincida con el formato del archivo
+        String codigoBusqueda = codigo.trim();
+        if (!codigoBusqueda.contains("@")) {
+            codigoBusqueda = codigoBusqueda + "@@"; // Agregamos los @ para que coincida con el formato
+        }
+
+        final String codigoFinal = codigoBusqueda;
+        Materia materia = materias.stream()
+                .filter(m -> m.getCodigo().startsWith(codigoFinal.split("@@")[0])) // Comparamos solo la parte numérica
+                .findFirst()
+                .orElse(null);
+
+        if (materia == null) {
+            mostrarAlerta("Error", "No se encontró la materia con código: " + codigo);
+        }
+
+        return materia;
     }
 
-    // Buscar Docente por código
     private Docente buscarDocentePorCodigo(String codigo) throws IOException {
         List<Docente> docentes = Persistencia.cargarDocentes(Persistencia.RUTA_ARCHIVO_DOCENTES);
-        return docentes.stream().filter(d -> d.getCodigo().equals(codigo)).findFirst().orElse(null);
+
+        if (docentes.isEmpty()) {
+            mostrarAlerta("Error", "No hay docentes registrados en el sistema");
+            return null;
+        }
+
+        Docente docente = docentes.stream()
+                .filter(d -> d.getCodigo().trim().equals(codigo.trim()))
+                .findFirst()
+                .orElse(null);
+
+        if (docente == null) {
+            mostrarAlerta("Error", "No se encontró el docente con código: " + codigo);
+        }
+
+        return docente;
     }
 
-    // Buscar Estudiantes por sus códigos
     private List<Estudiante> buscarEstudiantesPorCodigos(String[] codigos) throws IOException {
         List<Estudiante> estudiantes = Persistencia.cargarEstudiantes(Persistencia.RUTA_ARCHIVO_ESTUDIANTES);
         List<Estudiante> estudiantesEncontrados = new ArrayList<>();
 
+        if (estudiantes.isEmpty()) {
+            mostrarAlerta("Error", "No hay estudiantes registrados en el sistema");
+            return estudiantesEncontrados;
+        }
+
         for (String codigo : codigos) {
-            estudiantes.stream().filter(e -> e.getCodigo().equals(codigo.trim()))
-                    .findFirst().ifPresent(estudiantesEncontrados::add);
+            String codigoLimpio = codigo.trim();
+            estudiantes.stream()
+                    .filter(e -> e.getCodigo().trim().equals(codigoLimpio))
+                    .findFirst()
+                    .ifPresent(estudiantesEncontrados::add);
+        }
+
+        if (estudiantesEncontrados.isEmpty()) {
+            mostrarAlerta("Error", "No se encontró ningún estudiante con los códigos proporcionados");
+        } else if (estudiantesEncontrados.size() < codigos.length) {
+            mostrarAlerta("Advertencia", "No se encontraron todos los estudiantes especificados");
         }
 
         return estudiantesEncontrados;
     }
 
+    // También actualizaremos el formatoAsignacion para asegurar consistencia
+    private String formatoAsignacion(AsignacionMaterias asignacion) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(asignacion.getCodigoAsignacion()).append("@@");
+        sb.append(asignacion.getMateria().getCodigo()).append("@@");
+        sb.append(asignacion.getMateria().getNombre()).append("@@");
+        sb.append(asignacion.getDocente().getCodigo()).append("@@");
+
+        // Concatenar los códigos de estudiantes
+        String estudiantesCodigos = asignacion.getEstudiantes().stream()
+                .map(Estudiante::getCodigo)
+                .reduce((a, b) -> a + "@@" + b)
+                .orElse("");
+
+        sb.append(estudiantesCodigos);
+        return sb.toString();
+    }
+
     private void guardarAsignacion(AsignacionMaterias asignacion) throws IOException {
+        if (asignacion == null || asignacion.getMateria() == null) {
+            throw new IllegalArgumentException("La asignación o la materia no pueden ser null");
+        }
+
         String contenido = formatoAsignacion(asignacion);
         Persistencia.guardarAsignacion(contenido);
         Persistencia.guardaRegistroLog("Asignación guardada: " + asignacion.getCodigoAsignacion(), 1, "Asignar");
-    }
-
-    // Formato para guardar la asignación en el archivo de texto
-    private String formatoAsignacion(AsignacionMaterias asignacion) {
-        return asignacion.getCodigoAsignacion() + "@@" + asignacion.getMateria().getCodigo() + "@@" +
-                asignacion.getMateria().getNombre() + "@@" + asignacion.getDocente().getCodigo() + "@@" +
-                String.join("@@", asignacion.getEstudiantes().stream().map(e -> e.getCodigo()).toArray(String[]::new));
     }
 }
