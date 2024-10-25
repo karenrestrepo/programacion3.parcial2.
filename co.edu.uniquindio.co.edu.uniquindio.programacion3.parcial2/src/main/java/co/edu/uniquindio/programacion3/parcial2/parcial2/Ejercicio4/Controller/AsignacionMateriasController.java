@@ -163,20 +163,29 @@ public class AsignacionMateriasController {
             return null;
         }
 
-        // Formatear el código de búsqueda para que coincida con el formato del archivo
+        // Limpiar el código de entrada
         String codigoBusqueda = codigo.trim();
-        if (!codigoBusqueda.contains("@")) {
-            codigoBusqueda = codigoBusqueda + "@@"; // Agregamos los @ para que coincida con el formato
-        }
 
-        final String codigoFinal = codigoBusqueda;
+        // Imprimir para debug
+        System.out.println("Buscando materia con código: " + codigoBusqueda);
+        System.out.println("Materias disponibles:");
+        materias.forEach(m -> System.out.println("Código: '" + m.getCodigo() + "' Nombre: '" + m.getNombre() + "'"));
+
+        // Buscar la materia comparando solo la parte numérica del código
         Materia materia = materias.stream()
-                .filter(m -> m.getCodigo().startsWith(codigoFinal.split("@@")[0])) // Comparamos solo la parte numérica
+                .filter(m -> {
+                    String codigoMateria = m.getCodigo().split("@@")[0].trim();
+                    boolean matches = codigoMateria.equals(codigoBusqueda);
+                    System.out.println("Comparando: '" + codigoMateria + "' con '" + codigoBusqueda + "' = " + matches);
+                    return matches;
+                })
                 .findFirst()
                 .orElse(null);
 
         if (materia == null) {
             mostrarAlerta("Error", "No se encontró la materia con código: " + codigo);
+        } else {
+            System.out.println("Materia encontrada: " + materia.getCodigo() + " - " + materia.getNombre());
         }
 
         return materia;
